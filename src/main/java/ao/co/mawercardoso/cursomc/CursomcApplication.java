@@ -13,6 +13,7 @@ import ao.co.mawercardoso.cursomc.domain.Cidade;
 import ao.co.mawercardoso.cursomc.domain.Cliente;
 import ao.co.mawercardoso.cursomc.domain.Endereco;
 import ao.co.mawercardoso.cursomc.domain.Estado;
+import ao.co.mawercardoso.cursomc.domain.ItemPedido;
 import ao.co.mawercardoso.cursomc.domain.Pagamento;
 import ao.co.mawercardoso.cursomc.domain.PagamentoComBoleto;
 import ao.co.mawercardoso.cursomc.domain.PagamentoComCartao;
@@ -25,6 +26,7 @@ import ao.co.mawercardoso.cursomc.repositories.CidadeRepository;
 import ao.co.mawercardoso.cursomc.repositories.ClienteRepository;
 import ao.co.mawercardoso.cursomc.repositories.EnderecoRepository;
 import ao.co.mawercardoso.cursomc.repositories.EstadoRepository;
+import ao.co.mawercardoso.cursomc.repositories.ItemPedidoRepository;
 import ao.co.mawercardoso.cursomc.repositories.PagamentoRepository;
 import ao.co.mawercardoso.cursomc.repositories.PedidoRepository;
 import ao.co.mawercardoso.cursomc.repositories.ProdutoRepository;
@@ -48,6 +50,8 @@ public class CursomcApplication implements CommandLineRunner {
 	private PedidoRepository pedidoRepository;
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -112,5 +116,17 @@ public class CursomcApplication implements CommandLineRunner {
 		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
 		
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2_000.00);
+		ItemPedido ip2 = new ItemPedido(ped1, p3, 0.00, 2, 80.00);
+		ItemPedido ip3 = new ItemPedido(ped2, p2, 100.00, 1, 800.00);
+		
+		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+		
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip3));
+		p3.getItens().addAll(Arrays.asList(ip2));
+		
+		itemPedidoRepository.saveAll(Arrays.asList(ip1, ip2, ip3));
 	}
 }
